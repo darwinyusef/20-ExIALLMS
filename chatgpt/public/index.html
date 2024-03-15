@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <meta
+      name="description"
+      content="https://codepen.io/nicolaspavlotsky/pen/wqGgLO"
+    />
+    <title>Peliculas o Canciones</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>Recomendaciones de <span id="infotext"></span> para ver este finde semana</h1>
+
+      <div id="elmento" class="cols"></div>
+    </div>
+
+    <script type="module">
+      const text = "Canciones de ROCK en ingles";
+      const cantidad = 10;
+      document.getElementById("infotext").innerText  = text;
+
+      const url = `http://localhost:3000/response?mensaje=${text}&cantidad=${cantidad}`;
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          // Mostrar las películas en la página
+          const contenidos = data.response_gpt.content;
+          console.log(contenidos);
+          JSON.parse(contenidos).map((resp) => {
+            return (document.getElementById("elmento").innerHTML += `
+               <div class="col" ontouchstart="this.classList.toggle('hover');">
+      	<a href="https://www.youtube.com/results?search_query=${resp.nombre} opening shorts" target="_blank"><div class="container">
+      		<div class="front" style="background-image: url(https://unsplash.it/${resp.num_aleatorio}/${resp.num_aleatorio}/)">
+      			<div class="inner">
+      				<p>${resp.nombre}</p>
+                               <span>${resp.fecha}</span>
+      			</div>
+      		</div>
+      		<div class="back">
+      			<div class="inner">
+      			  <p><small>Premios</small> <br/> ${resp.premios}</p>
+      			</div>
+      		</div>
+      	</div></a>
+      </div>`);
+          });
+        });
+    </script>
+  </body>
+</html>

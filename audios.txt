@@ -1,0 +1,77 @@
+
+const ElevenLabs = require("elevenlabs-node");
+const apiKeyElevenLabs = process.env.ELEVENLABS_API_KEY;
+
+let voices = new ElevenLabs({ apiKey: apiKeyElevenLabs });
+
+
+
+async function activeElevenLabs(ms) {
+
+    return await voices.textToSpeech({
+        // Required Parameters
+        // The name of your audio file
+        fileName: "./src/public/audios/audio.mp3",
+        // The text you wish to convert to speech                 
+        textInput: ms,
+        // Optional Parameters
+        // A different Voice ID from the default
+        // The stability for the converted speech
+        voiceId: "5Q0t7uMcjvnagumLfvZi",
+        // The similarity boost for the converted speech      
+        stability: 0.5,
+        similarityBoost: 0.5,
+        // The ElevenLabs Model ID                        
+        modelId: "eleven_multilingual_v2",
+        // The style exaggeration for the converted speech   
+        style: 1,
+        // The speaker boost for the converted speech                          
+        speakerBoost: true
+    }).then((res) => {
+        console.log(res);
+    }).catch((e) => {
+        console.log(e);
+    });
+}
+
+
+He llegado a la montaña mas antigua del mundo y he encontrao a un sabio, este sabio tiene un diccionario magico que recibe cualquier 
+        palabra sin importar que tan dificil sea y le da un significado unico magico, yo digo esta palabra ${mensaje} y tu defines el resultado 
+        
+        ten en cuenta estos ejemplos:
+        
+        Ejemplo 1:
+        Usuario: Quisiera saber el significado de la palabra "selenofobia".
+        Respuesta magica1: La selenofobia es el temor irracional a la Luna. Quienes sufren de selenofobia pueden experimentar ansiedad extrema durante las noches de luna llena, asi como cuando el hombre lobo atemorizaba a miles de personas en la noche y se consumia sus almas."
+        Ejemplo 2:
+        Usuario: ¿Cuál es el significado de "quimérico"?
+        Respuesta magica2: Lo quimérico se refiere a algo ilusorio o fantástico, a menudo relacionado con ideas o proyectos que son difíciles de alcanzar o poco realistas. Es comúnmente utilizado para describir algo que parece tener características de fantasía o imaginación.
+        
+        por ultimo ten en cuenta lo siguiente ${JSON.stringify(data)}
+
+
+
+
+    <script>
+      const audioPlayer = document.getElementById("audioPlayer");
+      const playButton = document.getElementById("playButton");
+      const stopButton = document.getElementById("stopButton");
+
+      // Función para reproducir audio
+      function playAudio() {
+        audioPlayer.play();
+      }
+
+      // Función para detener audio
+      function stopAudio() {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+
+      // Agregar eventos a los botones
+      playButton.addEventListener("click", playAudio);
+      stopButton.addEventListener("click", stopAudio);
+
+      // Reproducir automáticamente al cargar la página
+      window.addEventListener("load", playAudio);
+    </script>
