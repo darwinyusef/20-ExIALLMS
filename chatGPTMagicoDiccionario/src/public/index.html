@@ -36,6 +36,40 @@
       .hidden {
         display: none;
       }
+      .btn-outline-secondary {
+        background: #ffab00b3;
+        width: 70px;
+        border: 1px solid rgba(142, 64, 64, 0.395);
+        border-radius: 0px 20px 20px 0px;
+        -webkit-box-shadow: 3px 3px 10px -6px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 3px 3px 10px -6px rgba(0, 0, 0, 0.75);
+        box-shadow: 3px 3px 10px -6px;
+        font-size: 40px;
+        text-shadow: #fc0 1px 0 10px;
+      }
+      svg {
+        width: 70px;
+        position: absolute;
+        right: 75px;
+        top: 5px;
+        display: none;
+      }
+      .responseIA {
+        display: block;
+        font-size: 30px;
+        font-weight: bold;
+        color: antiquewhite;
+        display: none;
+        text-shadow: 2px 2px 0 #b55640, 2px -2px 0 #b55640, -2px 2px 0 #b55640,
+          -2px -2px 0 #b55640, 2px 0px 0 #b55640, 0px 2px 0 #b55640,
+          -2px 0px 0 #b55640, 0px -2px 0 #b55640;
+      }
+
+      #play-button,
+      #stop-button {
+        cursor: pointer;
+        width: 40px;
+      }
     </style>
   </head>
   <body id="page-top">
@@ -51,27 +85,78 @@
     <!-- Header-->
     <header class="masthead d-flex align-items-center">
       <div class="container px-4 px-lg-5 text-center">
-        <h1 class="mb-1" style="font-size: 58px">
-          😝 Diccionario 🧙 mágico de palabras dificiles
-        </h1>
+        <h1 class="mb-1" style="font-size: 58px">😝 Diccionario 🧙 mágico</h1>
         <h4 class="mb-5 text-white">
           <em>Una aplicación creada con CHATGTP 🧐</em>
+          <p id="controlsa">
+            <img id="play-button" src="./assets/play.svg" alt="play" />
+            <img id="stop-button" src="./assets/stop.svg" alt="stop" />
+          </p>
         </h4>
 
-        <form id="sendform">
+        <form>
           <div class="mb-3">
             <div>
-              Escribe una palabra dificil y si no conoces alguna entonces
-              escribe: pregunta pregunta y te daremos una
+              Ingresa una palabra para buscar con AI el significado, si no
+              conoces alguna entonces Escribe: pregunta pregunta y te daremos
+              una nueva palabra
             </div>
-            <input
-              type="text"
-              class="form-control chatgpt-chat"
-              id="question_input"
-              aria-describedby="question"
-            />
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control chatgpt-chat"
+                id="buscadorvoz"
+                placeholder="Viajero brindanos tu sabia pregunta"
+              />
+              <br />
+
+              <svg
+                id="spinner"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 200 200"
+              >
+                <path
+                  fill="#FFA109"
+                  stroke="#FFA109"
+                  stroke-width="15"
+                  transform-origin="center"
+                  d="m148 84.7 13.8-8-10-17.3-13.8 8a50 50 0 0 0-27.4-15.9v-16h-20v16A50 50 0 0 0 63 67.4l-13.8-8-10 17.3 13.8 8a50 50 0 0 0 0 31.7l-13.8 8 10 17.3 13.8-8a50 50 0 0 0 27.5 15.9v16h20v-16a50 50 0 0 0 27.4-15.9l13.8 8 10-17.3-13.8-8a50 50 0 0 0 0-31.7Zm-47.5 50.8a35 35 0 1 1 0-70 35 35 0 0 1 0 70Z"
+                >
+                  <animateTransform
+                    type="rotate"
+                    attributeName="transform"
+                    calcMode="spline"
+                    dur="2"
+                    values="0;120"
+                    keyTimes="0;1"
+                    keySplines="0 0 1 1"
+                    repeatCount="indefinite"
+                  ></animateTransform>
+                </path>
+              </svg>
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="start"
+                onclick="iniciarGrabacion()"
+              >
+                <img
+                  src="./assets/mic.svg"
+                  style="width: 40px"
+                  alt="microfono"
+                />
+              </button>
+            </div>
+            <div class="responseIA" id="responseIA">
+              Creando Respuesta de la IA, un momento por favor...
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-xl" href="#about">
+          <button
+            id="btnSend"
+            type="button"
+            class="btn btn-primary btn-xl"
+            href="#about"
+          >
             Envia la consulta
           </button>
           <br /><br />
@@ -87,14 +172,13 @@
             <h3 class="mb-3">
               😇 A continuación te daré una respuesta a una pregunta dificil
             </h3>
+
+            <!-- controls -->
+            <audio id="audio-player" allow="autoplay"></audio>
+
             <h1 id="respuesta" class="mb-5">
               Esperando una pregunta a chat gpt...
             </h1>
-            <!-- <audio controls id="audioPlayer">
-              <source src="audios/audio.mp3" type="audio/mpeg" />
-            </audio>
-            <button id="playButton">Reproducir</button>
-            <button id="stopButton">Detener</button> -->
 
             <div id="gatito" class="hidden">
               <img
@@ -147,6 +231,7 @@
         </p>
       </div>
     </footer>
+
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top"
       ><i class="fas fa-angle-up"></i

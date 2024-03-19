@@ -1,3 +1,35 @@
+ <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="start"
+                onclick="iniciarGrabacion()"
+              >
+                🎙️
+              </button>
+
+
+var reconocimiento = new webkitSpeechRecognition();
+reconocimiento.onresult = (event) => {
+    var decirTexto = "";
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+            decirTexto = event.results[i][0].transcript;
+        } else {
+            decirTexto += event.results[i][0].transcript;
+        }
+    }
+    document.getElementById('buscadorvoz').value = decirTexto;
+}
+
+const iniciarGrabacion = () => {
+    document.getElementById('buscadorvoz').value = "";
+    document.getElementById('buscadorvoz').focus();
+    reconocimiento.start();
+}
+
+
+
+
 
 const ElevenLabs = require("elevenlabs-node");
 const apiKeyElevenLabs = process.env.ELEVENLABS_API_KEY;
@@ -5,9 +37,7 @@ const apiKeyElevenLabs = process.env.ELEVENLABS_API_KEY;
 let voices = new ElevenLabs({ apiKey: apiKeyElevenLabs });
 
 
-
 async function activeElevenLabs(ms) {
-
     return await voices.textToSpeech({
         // Required Parameters
         // The name of your audio file
@@ -28,26 +58,20 @@ async function activeElevenLabs(ms) {
         // The speaker boost for the converted speech                          
         speakerBoost: true
     }).then((res) => {
-        console.log(res);
+        return res;
     }).catch((e) => {
         console.log(e);
     });
 }
 
+  info = res;
+    activeElevenLabs(chatCompletion.choices[0].message.content.replace(/\\n/g, "\n")).then((res) => {
+        info.json({ 'response': chatCompletion.choices[0].message.content, res });
+    });
 
-He llegado a la montaña mas antigua del mundo y he encontrao a un sabio, este sabio tiene un diccionario magico que recibe cualquier 
-        palabra sin importar que tan dificil sea y le da un significado unico magico, yo digo esta palabra ${mensaje} y tu defines el resultado 
-        
-        ten en cuenta estos ejemplos:
-        
-        Ejemplo 1:
-        Usuario: Quisiera saber el significado de la palabra "selenofobia".
-        Respuesta magica1: La selenofobia es el temor irracional a la Luna. Quienes sufren de selenofobia pueden experimentar ansiedad extrema durante las noches de luna llena, asi como cuando el hombre lobo atemorizaba a miles de personas en la noche y se consumia sus almas."
-        Ejemplo 2:
-        Usuario: ¿Cuál es el significado de "quimérico"?
-        Respuesta magica2: Lo quimérico se refiere a algo ilusorio o fantástico, a menudo relacionado con ideas o proyectos que son difíciles de alcanzar o poco realistas. Es comúnmente utilizado para describir algo que parece tener características de fantasía o imaginación.
-        
-        por ultimo ten en cuenta lo siguiente ${JSON.stringify(data)}
+
+
+
 
 
 
@@ -75,3 +99,35 @@ He llegado a la montaña mas antigua del mundo y he encontrao a un sabio, este s
       // Reproducir automáticamente al cargar la página
       window.addEventListener("load", playAudio);
     </script>
+
+
+
+
+
+
+async function questionChatGPT(pregunta) {
+    try {
+        document.getElementById('respuesta').classList.remove("text-red");
+        const response = await fetch(`http://localhost:3000/chats?pregunta=${pregunta}`);
+        const question = await response.json();
+        document.getElementById('respuesta').textContent = question.response_gpt.content;
+        location.href = '/#about';
+    } catch (error) {
+        console.log(error);
+        document.getElementById('respuesta').textContent = "Error en la api";
+    }
+  
+}
+
+
+document.getElementById('sendform').addEventListener("submit", (event) => {
+    event.preventDefault();
+    let pregunta = document.getElementById('question_input').value;
+    questionChatGPT(pregunta)
+});
+
+document.getElementById('vuelve').addEventListener("click", (event) => {
+    event.preventDefault();
+    document.getElementById('question_input').value = 'pregunta pregunta';
+    location.href = '/#page-top';
+});
