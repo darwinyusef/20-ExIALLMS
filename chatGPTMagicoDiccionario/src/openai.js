@@ -1,27 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const OpenAI = require('openai');
 const path = require('path');
+const OpenAI = require('openai');
+
 const ElevenLabs = require("elevenlabs-node");
 const apiKeyElevenLabs = process.env.ELEVENLABS_API_KEY;
 
 let voices = new ElevenLabs({ apiKey: apiKeyElevenLabs });
 
 const dates = new Date();
-const dir = dates.getMonth().toString() + dates.getDate().toString();
+const dir = (dates.getMonth() + 1).toString() + dates.getDate().toString();
+
 function createFolder(dir) {
-    info = fs.mkdir(path.join(__dirname, `./public/audios/${dir.toString()}`),
-        (err) => {
-            if (err.code == 'EEXIST') {
-                console.log('Directory already exist successfully!');
-                return;
-            }
-            if (err) {
-                return console.error(err);
-            }
-            console.log('Directory created successfully!');
-        });
+    info = fs.mkdir((path.join(__dirname), `./src/public/audios/${dir.toString()}`), (e) => {
+        if (e.code == 'EEXIST') {
+            return console.log('Directory exist sucessfully');
+        }
+        if (e) {
+            return console.log(e);
+        }
+        console.log('Directory created sucessfully');
+    });
 }
 
 async function activeElevenLabs(ms) {
@@ -97,11 +97,10 @@ router.get('/chats', async (req, res) => {
     }
     const chatCompletion = await openAIContent(mensaje);
     const info = res;
-    createFolder(dir);
+    createFolder(dir); 
     activeElevenLabs(chatCompletion.choices[0].message.content.replace(/\\n/g, "\n")).then((res) => {
         info.status(200).json({ 'response': chatCompletion.choices[0].message.content, res });
     });
-    /* res.status(200).json({ response: chatCompletion.choices[0].message.content }); */
 });
 
 module.exports = router; 

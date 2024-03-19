@@ -1,133 +1,85 @@
- <button
-                class="btn btn-outline-secondary"
-                type="button"
-                id="start"
-                onclick="iniciarGrabacion()"
-              >
-                🎙️
-              </button>
+const path = require('path');
 
 
-var reconocimiento = new webkitSpeechRecognition();
-reconocimiento.onresult = (event) => {
-    var decirTexto = "";
-    for (var i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-            decirTexto = event.results[i][0].transcript;
-        } else {
-            decirTexto += event.results[i][0].transcript;
-        }
-    }
-    document.getElementById('buscadorvoz').value = decirTexto;
-}
-
-const iniciarGrabacion = () => {
-    document.getElementById('buscadorvoz').value = "";
-    document.getElementById('buscadorvoz').focus();
-    reconocimiento.start();
+const dates = new Date();
+const dir = dates.getMonth().toString() + dates.getDate().toString();
+function createFolder(dir) {
+    info = fs.mkdir(path.join(__dirname, `./public/audios/${dir.toString()}`),
+        (err) => {
+            if (err.code == 'EEXIST') {
+                console.log('Directory already exist successfully!');
+                return;
+            }
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+        });
 }
 
 
+ fileName: `./src/public/audios/${dir}/${dates.getTime()}.mp3`,
+
+
+// in function
+ createFolder(dir);
 
 
 
-const ElevenLabs = require("elevenlabs-node");
-const apiKeyElevenLabs = process.env.ELEVENLABS_API_KEY;
-
-let voices = new ElevenLabs({ apiKey: apiKeyElevenLabs });
+/***********************
 
 
-async function activeElevenLabs(ms) {
-    return await voices.textToSpeech({
-        // Required Parameters
-        // The name of your audio file
-        fileName: "./src/public/audios/audio.mp3",
-        // The text you wish to convert to speech                 
-        textInput: ms,
-        // Optional Parameters
-        // A different Voice ID from the default
-        // The stability for the converted speech
-        voiceId: "5Q0t7uMcjvnagumLfvZi",
-        // The similarity boost for the converted speech      
-        stability: 0.5,
-        similarityBoost: 0.5,
-        // The ElevenLabs Model ID                        
-        modelId: "eleven_multilingual_v2",
-        // The style exaggeration for the converted speech   
-        style: 1,
-        // The speaker boost for the converted speech                          
-        speakerBoost: true
-    }).then((res) => {
-        return res;
-    }).catch((e) => {
-        console.log(e);
-    });
+
+ <p id="controlsa">
+            <img id="play-button" src="./assets/play.svg" alt="play" />
+            <img id="stop-button" src="./assets/stop.svg" alt="stop" />
+          </p>
+
+
+
+/*************
+
+localStorage.setItem('audiourl', '../audios/principalAudio.mp3');
+
+window.onload = function () {
+    const url = localStorage.getItem('audiourl');
+    console.log(url);
+    audioPlayer.src = `../audios/${url}`; // Cambiar por la URL del primer archivo
+    audioPlayer.play();
 }
 
-  info = res;
-    activeElevenLabs(chatCompletion.choices[0].message.content.replace(/\\n/g, "\n")).then((res) => {
-        info.json({ 'response': chatCompletion.choices[0].message.content, res });
-    });
 
-
-
-
-
-
-
-
-    <script>
-      const audioPlayer = document.getElementById("audioPlayer");
-      const playButton = document.getElementById("playButton");
-      const stopButton = document.getElementById("stopButton");
-
-      // Función para reproducir audio
-      function playAudio() {
-        audioPlayer.play();
-      }
-
-      // Función para detener audio
-      function stopAudio() {
-        audioPlayer.pause();
+// in a fetch
+     const sending = `${String(question.res.fileName).replace('./src/public/', '')}`;
+        localStorage.setItem('audiourl', sending);
+        audioPlayer.src = sending;
         audioPlayer.currentTime = 0;
-      }
-
-      // Agregar eventos a los botones
-      playButton.addEventListener("click", playAudio);
-      stopButton.addEventListener("click", stopAudio);
-
-      // Reproducir automáticamente al cargar la página
-      window.addEventListener("load", playAudio);
-    </script>
+        audioPlayer.play();
 
 
 
 
-
-
-async function questionChatGPT(pregunta) {
-    try {
-        document.getElementById('respuesta').classList.remove("text-red");
-        const response = await fetch(`http://localhost:3000/chats?pregunta=${pregunta}`);
-        const question = await response.json();
-        document.getElementById('respuesta').textContent = question.response_gpt.content;
-        location.href = '/#about';
-    } catch (error) {
-        console.log(error);
-        document.getElementById('respuesta').textContent = "Error en la api";
-    }
-  
-}
-
-
-document.getElementById('sendform').addEventListener("submit", (event) => {
-    event.preventDefault();
-    let pregunta = document.getElementById('question_input').value;
-    questionChatGPT(pregunta)
+// Función para reproducir el audio al hacer clic en el botón "Reproducir"
+playButton.addEventListener("click", function () {
+    const url = localStorage.getItem('audiourl');
+    audioPlayer.src = `../audios/${url}`;
+    audioPlayer.play();
 });
 
-document.getElementById('vuelve').addEventListener("click", (event) => {
-    event.preventDefault();
-    document.getElementById('question_input').value = 'pregunta pregunta';
-    location.href = '/#page-top';
+// Función para detener el audio al hacer clic en el botón "Detener"
+stopButton.addEventListener("click", function () {
+    const url = localStorage.getItem('audiourl');
+    audioPlayer.src = `../audios/${url}`;
+    audioPlayer.pause();
+    // audioPlayer.currentTime = 0; // Reinicia el tiempo de reproducción
 });
+
+// Función para cambiar de audio al finalizar el actual (opcional)
+audioPlayer.addEventListener("ended", function () {
+    const url = localStorage.getItem('audiourl');
+    audioPlayer.src = `../audios/${url}`;
+    audioPlayer.currentTime = 0;
+    audioPlayer.pause();
+});
+
+

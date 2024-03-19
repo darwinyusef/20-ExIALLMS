@@ -70,6 +70,14 @@
         cursor: pointer;
         width: 40px;
       }
+      .imgmago {
+        width: 250px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+      }
+      #controlsa {
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body id="page-top">
@@ -85,19 +93,24 @@
     <!-- Header-->
     <header class="masthead d-flex align-items-center">
       <div class="container px-4 px-lg-5 text-center">
-        <h1 class="mb-1" style="font-size: 58px">😝 Diccionario 🧙 mágico</h1>
-        <h4 class="mb-5 text-white">
-          <em>Una aplicación creada con CHATGTP 🧐</em>
-          <p id="controlsa">
-            <img id="play-button" src="./assets/play.svg" alt="play" />
-            <img id="stop-button" src="./assets/stop.svg" alt="stop" />
-          </p>
-        </h4>
+        <h1 class="mb-1" style="font-size: 58px">
+          Diccionario mágico del 🧙 sabio
+        </h1>
+        <br />
+        <p id="controlsa">
+          <img id="play-button" src="./assets/play.svg" alt="play" />
+          <img id="stop-button" src="./assets/stop.svg" alt="stop" />
+        </p>
+        <img
+          class="imgmago"
+          src="./assets/mago.jpg"
+          alt="mago con diccionario"
+        />
 
         <form>
           <div class="mb-3">
             <div>
-              Ingresa una palabra para buscar con AI el significado, si no
+              Ingresa una palabra para buscar con 😝 AI el significado, si no
               conoces alguna entonces Escribe: pregunta pregunta y te daremos
               una nueva palabra
             </div>
@@ -148,7 +161,7 @@
               </button>
             </div>
             <div class="responseIA" id="responseIA">
-              Creando Respuesta de la IA, un momento por favor...
+              El sabio busca en el diccionario mágico tu respuesta, un momento por favor...
             </div>
           </div>
           <button
@@ -159,11 +172,10 @@
           >
             Envia la consulta
           </button>
-          <br /><br />
+          <br />
         </form>
       </div>
     </header>
-    <
     <!-- About-->
     <section class="content-section bg-light" id="about">
       <div class="container px-4 px-lg-5 text-center">
@@ -175,19 +187,22 @@
 
             <!-- controls -->
             <audio id="audio-player" allow="autoplay"></audio>
-
+            <!-- <p id="controlsa">
+              <img id="play-button" src="./assets/play.svg" alt="play" />
+              <img id="stop-button" src="./assets/stop.svg" alt="stop" />
+            </p> -->
             <h1 id="respuesta" class="mb-5">
               Esperando una pregunta a chat gpt...
             </h1>
 
-            <div id="gatito" class="hidden">
+            <div id="sage" class="hidden">
               <img
                 style="width: 200px"
-                src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbDRlejdydnkwa2trMHMxNmcwbnFuMWlqenhvdzJiNTNwY2tkbjB6ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VbnUQpnihPSIgIXuZv/giphy.gif"
+                src="./assets/diccionario.jpg"
                 alt="gato leyendo"
               />
 
-              <p>
+              <p id="addinfo">
                 <strong>Enlaces relacionados: </strong> <br /><br />
 
                 <span>Google: </span
